@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Financial Reports{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Financial Reports</h1>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Income vs Expenses (Last 6 Months)</h2>
+        <canvas id="incomeExpenseChart"></canvas>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Expenses by Category</h2>
+        <canvas id="expenseCategoryChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Income vs Expense Chart
+    var incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+    var incomeExpenseChart = new Chart(incomeExpenseCtx, {
+        type: 'bar',
+        data: {
+            labels: [{% for item in income_expense_data %}'{{ item.month }}',{% endfor %}],
+            datasets: [{
+                label: 'Income',
+                data: [{% for item in income_expense_data %}{{ item.income }},{% endfor %}],
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            }, {
+                label: 'Expenses',
+                data: [{% for item in income_expense_data %}{{ item.expense }},{% endfor %}],
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Monthly Income vs Expenses'
+                }
+            }
+        }
+    });
+
+    // Expense by Category Chart
+    var expenseCategoryCtx = document.getElementById('expenseCategoryChart').getContext('2d');
+    var expenseCategoryChart = new Chart(expenseCategoryCtx, {
+        type: 'pie',
+        data: {
+            labels: [{% for item in expense_by_category %}'{{ item.category }}',{% endfor %}],
+            datasets: [{
+                data: [{% for item in expense_by_category %}{{ item.total }},{% endfor %}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                ],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Expenses by Category'
+                }
+            }
+        }
+    });
+</script>
+
+{% if not income_expense_data and not expense_by_category %}
+<div class="alert alert-info" role="alert">
+    No data available for the reports. Please add some income and expenses to see the charts.
+</div>
+{% endif %}
+
+{% endblock %}
