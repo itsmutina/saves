@@ -11,7 +11,7 @@ from .models import Income, Expense
 from django.db.models.functions import TruncMonth
 from django.utils import timezone
 
-@login_required
+#@login_required
 def dashboard(request):
     incomes = Income.objects.filter(user=request.user)
     expenses = Expense.objects.filter(user=request.user)
@@ -76,7 +76,7 @@ def dashboard(request):
         'monthly_summary': monthly_summary,
     }
     return render(request, 'tracker/dashboard.html', context)
-@login_required
+#@login_required
 def add_income(request):
     if request.method == 'POST':
         form = IncomeForm(request.POST)
@@ -89,7 +89,7 @@ def add_income(request):
         form = IncomeForm()
     return render(request, 'tracker/add_income.html', {'form': form})
 
-@login_required
+#@login_required
 def add_expense(request):
     if request.method == 'POST':
         form = ExpenseForm(request.POST)
@@ -102,7 +102,7 @@ def add_expense(request):
         form = ExpenseForm()
     return render(request, 'tracker/add_expense.html', {'form': form})
 
-@login_required
+@@login_required
 def reports(request):
     # Get data for the last 6 months
     six_months_ago = timezone.now().date() - timezone.timedelta(days=180)
