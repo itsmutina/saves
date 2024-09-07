@@ -102,7 +102,7 @@ def add_expense(request):
         form = ExpenseForm()
     return render(request, 'tracker/add_expense.html', {'form': form})
 
-@@login_required
+#@login_required
 def reports(request):
     # Get data for the last 6 months
     six_months_ago = timezone.now().date() - timezone.timedelta(days=180)
